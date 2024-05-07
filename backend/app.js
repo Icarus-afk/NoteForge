@@ -13,7 +13,7 @@ import MongoStore from 'connect-mongo';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import passport from  './utils/passportConfig.js';
-
+import { Storage } from '@google-cloud/storage'; // Import Google Cloud Storage
 
 dotenv.config();
 
@@ -29,13 +29,11 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(cookieParser());
 
 
-  
 app.use(cors({
     origin: ['http://localhost:5173', 'http://localhost:8000', 'http://127.0.0.1:5173'], 
     credentials: true
 }));
-// // app.use(cors("*"));  
-// app.use(cors());
+
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: true,
@@ -59,10 +57,6 @@ app.use(express.static('public'));
 
 app.use('/user', userRoutes);
 app.use('/note', noteRoutes);
-app.use('/images/event', express.static(path.join(__dirname, 'images/event')));
 app.use('/images/user_image', express.static(path.join(__dirname, 'images/user_image')));
-
-
-
 
 export default app;

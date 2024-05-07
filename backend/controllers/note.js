@@ -5,6 +5,9 @@ import { dirname } from 'path';
 import path from 'path';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import { URL } from 'url';
+import os from 'os';
+import fs from 'fs';
 
 dotenv.config();
 
@@ -45,8 +48,7 @@ export const createNote = async (req, res, next) => {
   const { originalname } = req.file;
   console.log('originalname:', originalname);
 
-  const uniqueFileName = originalname; // Temporarily use the original file name
-  // Use the user's ID from req.user as the folder name
+  const uniqueFileName = originalname; 
   const blob = bucket.file(`${userId}/${uniqueFileName}`);
   const blobStream = blob.createWriteStream();
 
@@ -66,11 +68,24 @@ export const createNote = async (req, res, next) => {
     });
 
     newNote.save()
-      .then(() => console.log('Note saved successfully'))
-      .catch(err => console.error(err));
-    console.log('newNote saved:', newNote);
-
-    res.status(200).send(newNote);
+      .then(() => {
+        console.log('Note saved successfully');
+        res.status(200).json({
+          status: 'success',
+          code: 200,
+          message: 'Note saved successfully',
+          data: newNote
+        });
+      })
+      .catch(err => {
+        console.error(err);
+        res.status(500).json({
+          status: 'error',
+          code: 500,
+          message: 'An error occurred while saving the note',
+          data: null
+        });
+      });
   });
 
   blobStream.end(req.file.buffer);
@@ -79,48 +94,181 @@ export const createNote = async (req, res, next) => {
 
 
 export const getNotes = async (req, res) => {
+  console.log("USER ---> ", req.userId)
   const notes = await Note.find({ user: req.userId });
-  res.status(200).send(notes);
+  res.status(200).json({
+    status: 'success',
+    code: 200,
+    message: 'Notes fetched successfully',
+    data: notes
+  });
 };
 
 
 
-export const updateNote = async (req, res, next) => {
-  const { title, user } = req.body;
-  const { path, originalname } = req.file;
+export const updateNote = async (req, res) => {
+  const { title } = req.body;
+  const user = req.user._id;
+  const { originalname } = req.file;
 
-  const blob = bucket.file(`${user}/${originalname}`);
-  const blobStream = blob.createWriteStream();
+  try {
+    // Fetch the note to be updated
+    const note = await Note.findById(req.params.id);
 
-  blobStream.on('error', (err) => {
-    next(err);
-  });
+    if (!note) {
+      return res.status(404).json({
+        status: 'not found',
+        code: 404,
+        message: 'Note not found',
+        data: null
+      });
+    }
 
-  blobStream.on('finish', async () => {
-    const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+    // Delete the old file from the bucket
+    const oldFile = bucket.file(`${user}/${note.FileUrl.split('/').pop()}`);
+    await oldFile.delete();
 
-    const updatedNote = await Note.findByIdAndUpdate(req.params.id, {
-      title,
-      fileUrl: publicUrl,
-      user,
-    }, { new: true });
+    // Upload the new file to the bucket
+    const blob = bucket.file(`${user}/${originalname}`);
+    const blobStream = blob.createWriteStream();
 
-    res.status(200).send(updated);
-  });
+    blobStream.on('error', (err) => {
+      res.status(500).send({ message: 'Error uploading file', error: err });
+    });
 
-  blobStream.end(req.file.buffer);
+    blobStream.on('finish', async () => {
+      const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+
+      // Update the note
+      note.title = title;
+      note.FileUrl = publicUrl;
+      const updatedNote = await note.save();
+
+      res.status(200).json({
+        status: 'success',
+        code: 200,
+        message: 'Note updated successfully',
+        data: updatedNote
+      });
+    });
+
+    blobStream.end(req.file.buffer);
+  } catch (err) {
+    res.status(500).json({
+      status: 'error',
+      code: 500,
+      message: 'Error updating note',
+      data: null,
+    });  }
 };
-
 
 
 export const deleteNote = async (req, res) => {
   const note = await Note.findById(req.params.id);
-  const fileName = note.fileUrl.split('/').pop();
 
-  const file = bucket.file(fileName);
+  if (!note) {
+    return res.status(404).json({
+      status: 'not found',
+      code: 404,
+      message: 'Note not found',
+      data: null
+    });
+  }
+
+  if (!note.FileUrl) {
+    return res.status(400).json({
+      status: 'error',
+      code: 400,
+      message: 'Note does not have a FileUrl',
+      data: null
+    });
+  }
+
+  console.log('FileUrl:', note.FileUrl);
+
+  const urlParts = note.FileUrl.split('/');
+  const bucketName = 'forge_md';
+  const bucketNameIndex = urlParts.indexOf(bucketName);
+
+  if (bucketNameIndex === -1) {
+    return res.status(400).json({
+      status: 'error',
+      code: 400,
+      message: 'Invalid FileUrl',
+      data: null
+    });
+  }
+
+  let filePath = urlParts.slice(bucketNameIndex + 1).join('/');
+
+  filePath = filePath.replace(bucketName + '/', '');
+
+  console.log('filePath:', filePath);
+
+  const file = bucket.file(filePath);
 
   await file.delete();
-  await note.remove();
+  await Note.deleteOne({ _id: req.params.id });
 
-  res.status(200).send({ message: 'Note deleted successfully' });
+  res.status(200).json({
+    status: 'success',
+    code: 200,
+    message: 'Note deleted successfully',
+    data: null
+  });
+};
+
+
+
+export const getFile = async (req, res) => {
+  console.log("Gettin file")
+  const note = await Note.findById(req.params.id);
+  if (!note) {
+    return res.status(404).json({
+      status: 'fail',
+      code: 404,
+      message: 'Note not found',
+    });
+  }
+
+  const bucket = storage.bucket('forge_md');
+
+  const urlParts = note.FileUrl.split('/');
+  const bucketNameIndex = urlParts.indexOf('forge_md');
+
+  if (bucketNameIndex === -1) {
+    return res.status(400).json({
+      status: 'error',
+      code: 400,
+      message: 'Invalid FileUrl',
+      data: null
+    });
+  }
+
+  let filePath = urlParts.slice(bucketNameIndex + 1).join('/');
+  filePath = filePath.replace('forge_md/', '');
+
+  const file = bucket.file(filePath);
+
+  const tempFilePath = path.join(os.tmpdir(), path.basename(filePath));
+
+  file.download({destination: tempFilePath}, function(err) {
+    if (err) {
+      console.error(err);
+      res.status(500).send(err);
+    } else {
+      res.setHeader('Content-Type', 'text/markdown');
+      res.setHeader('Content-Disposition', `attachment; filename=${path.basename(filePath)}`);
+      res.sendFile(tempFilePath, function(err) {
+        if (err) {
+          console.error(err);
+          res.status(500).send(err);
+        } else {
+          fs.unlink(tempFilePath, function(err) {
+            if (err) console.error(err);
+          });
+        }
+      });
+    }
+  });
 };

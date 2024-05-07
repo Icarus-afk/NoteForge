@@ -70,7 +70,6 @@ export const signup = async (req, res) => {
       password: hashedPassword,
       name: `${firstName} ${lastName}`,
       isAdmin: isAdmin || false,
-      isOrganizer: isOrganizer || false,
       isActive: true,
       status: 'pending',
       dateOfBirth,
@@ -80,7 +79,6 @@ export const signup = async (req, res) => {
       bio, 
       interests, 
       joinedAt: new Date(), 
-      organizations 
     };
 
     const result = await UserModel.create(pendingUser);
