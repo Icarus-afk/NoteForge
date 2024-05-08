@@ -4,7 +4,7 @@ import cors from 'cors';
 import userRoutes from './routes/users.js';
 import noteRoutes from './routes/notes.js';
 import logger from './middleware/logger.js';
-import limiter from './middleware/rateLimiter.js';
+// import limiter from './middleware/rateLimiter.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import path from 'path';
@@ -51,7 +51,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(logger);
-app.use(limiter);
+// app.use(limiter);
 
 app.use(express.static('public'));
 
