@@ -37,7 +37,7 @@ const SignIn = () => {
     };
 
     return (
-        <Layout style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <Layout style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Row>
                 <Col span={24}>
                     <Card title="Sign In" headStyle={{ textAlign: 'center' }}>

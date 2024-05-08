@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { showCustomToast } from '../components/showCustomToast.jsx';
-import MdEditor from 'react-markdown-editor-lite';
+import MdEditor from "@uiw/react-md-editor";
 import MarkdownToJSX from 'markdown-to-jsx';
 import 'react-markdown-editor-lite/lib/index.css';
 import { apiCall } from '../utils/apiHandler.js';
 import { Input, Button, Card, Layout } from 'antd';
 import Navbar from '../components/Navbar';
+import './dark.css'
 
 
 
@@ -74,7 +75,7 @@ const NoteEditor = ({ isNewNote }) => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-    <Navbar />
+      <Navbar />
       <Card title="Note Editor" style={{ width: '80%', margin: 'auto', marginTop: '50px' }}>
         <Input
           placeholder="Enter title"
@@ -84,9 +85,17 @@ const NoteEditor = ({ isNewNote }) => {
         />
         <MdEditor
           value={fileContent}
-          style={{ height: "500px", marginBottom: '20px' }}
+          config={{
+            view: { menu: true, md: true, html: true },
+            markdownClass: 'markdown-body',
+            htmlClass: 'markdown-body',
+            canView: { menu: true, md: true, html: true, hideMenu: true },
+            theme: 'dark',
+            syncScrollMode: ['leftFollowRight', 'rightFollowLeft'],
+            height: '1000px'
+          }}
           renderHTML={(text) => <MarkdownToJSX>{text}</MarkdownToJSX>}
-          onChange={({ text }) => setFileContent(text)}
+          onChange={(text) => setFileContent(text || '')}
         />
         <Button type="primary" onClick={handleUpdate}>{isNewNote ? 'Create' : 'Update'}</Button>
       </Card>

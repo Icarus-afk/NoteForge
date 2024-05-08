@@ -18,7 +18,7 @@ const storage = new Storage({
   projectId: process.env.PROJECT_ID
 });
 
-const bucket = storage.bucket('forge_md');
+const bucket = storage.bucket(process.env.BUCKET);
 
 const generateUniqueFileName = async (user, originalname) => {
   let nameParts = originalname.split('.');

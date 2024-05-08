@@ -3,14 +3,28 @@ import jwt from "jsonwebtoken";
 import { mongoose } from "mongoose";
 import UserModel from "../models/user.js";
 import dotenv from 'dotenv';
+import { Storage } from '@google-cloud/storage';
 import logger from '../utils/consoleLogger.js'
 import redisClient from '../utils//initRedis.js';
 import { generateToken } from "../utils/generateToken.js";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import path from 'path';
+import os from 'os';
+import fs from 'fs';
 
 dotenv.config();
 
 
 const secret = process.env.JWT_SECRET;
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const storage = new Storage({
+  keyFilename: path.join(__dirname, 'keyfile.json'),
+  projectId: process.env.PROJECT_ID
+});
+
+const bucket = storage.bucket(process.env.BUCKET);
+
 
 
 export const signin = async (req, res) => {
@@ -20,7 +34,7 @@ export const signin = async (req, res) => {
     const oldUser = await UserModel.findOne({ email });
 
     if (!oldUser) {
-      logger.info(`User doesn't exist for email: ${email}`);
+      logger(`User doesn't exist for email: ${email}`);
       return res.status(404).json({ code: 404, success: false, message: "User doesn't exist" });
     }
 
@@ -34,15 +48,28 @@ export const signin = async (req, res) => {
     const token = generateToken(oldUser.email, oldUser._id, secret, "1h");
     console.log("Token -->", token);
     res.cookie('token', token, {
-      httpOnly: true, 
-      secure: false, 
-      sameSite: 'none', 
-      maxAge:  60 * 60 * 1000,
+      httpOnly: true,
+      secure: false,
+      sameSite: 'none',
+      maxAge: 60 * 60 * 1000,
       path: '/'
     });
 
-    // const refreshToken = jwt.sign({ id: oldUser._id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
+    // const refreshToken = jwt({ id: oldUser._id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
 
+    const bucket = storage.bucket(process.env.BUCKET);
+    const fileName = oldUser.userImage.split('/').pop();
+    const filePath = `profile_pics/${oldUser._id}/${fileName}`;
+    const file = bucket.file(filePath);
+    const tempFilePath = path.join(os.tmpdir(), path.basename(filePath));
+    await file.download({destination: tempFilePath});
+
+    // Read the image file as binary data
+    let imageData = fs.readFileSync(tempFilePath);
+
+    // Delete the temporary file
+    fs.unlinkSync(tempFilePath);
+    oldUser.userImage = imageData.toString('base64');
     logger.info(`User signed in successfully for email: ${email}`);
     res.status(200).json({ code: 200, success: true, message: "Signed in successfully", data: { result: oldUser } });
 
@@ -51,6 +78,8 @@ export const signin = async (req, res) => {
     res.status(500).json({ code: 500, success: false, message: "Something went wrong" });
   }
 };
+
+
 
 export const signup = async (req, res) => {
   const { email, password, firstName, lastName, isAdmin, isOrganizer, dateOfBirth, address, phoneNumber, bio, interests, organizations } = req.body;
@@ -75,27 +104,53 @@ export const signup = async (req, res) => {
       dateOfBirth,
       address,
       phoneNumber,
-      userImage: userImage ? userImage.path : null,
-      bio, 
-      interests, 
-      joinedAt: new Date(), 
+      bio,
+      interests,
+      joinedAt: new Date(),
     };
 
     const result = await UserModel.create(pendingUser);
 
-    await UserModel.updateOne({ _id: result._id }, { status: 'active' });
+    if (userImage) {
+      const uniqueFileName = userImage.originalname;
+      const blob = bucket.file(`profile_pics/${result._id}/${uniqueFileName}`);
+      const blobStream = blob.createWriteStream();
 
-    const token = generateToken(result.email, result._id, secret, "1h");
+      blobStream.on('error', (err) => {
+        console.error('blobStream error:', err);
+        throw err;
+      });
 
-    result._doc.userImage = userImage ? `${req.protocol}://${req.get('host')}/${result.userImage}` : null;
-    const user = await UserModel.findById(result._id).select('-password');
+      blobStream.on('finish', async () => {
+        const publicUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+        pendingUser.userImage = publicUrl;
 
-    res.status(201).json({ code: 201, success: true, message: "User signed up successfully", user: user });
+        await UserModel.updateOne({ _id: result._id }, { userImage: publicUrl, status: 'active' });
+
+        const token = generateToken(result.email, result._id, secret, "1h");
+
+        const user = await UserModel.findById(result._id).select('-password');
+
+        res.status(201).json({ code: 201, success: true, message: "User signed up successfully", user: user });
+      });
+
+      blobStream.end(userImage.buffer);
+    } else {
+      await UserModel.updateOne({ _id: result._id }, { status: 'active' });
+
+      const token = generateToken(result.email, result._id, secret, "1h");
+
+      const user = await UserModel.findById(result._id).select('-password');
+
+      res.status(201).json({ code: 201, success: true, message: "User signed up successfully", user: user });
+    }
   } catch (err) {
     logger.error(`Signup error for email: ${email}`, err);
     res.status(500).json({ code: 500, success: false, message: "Something went wrong" });
   }
 };
+
+
 
 export const updateUser = async (req, res) => {
   const { id } = req.params;
@@ -109,24 +164,51 @@ export const updateUser = async (req, res) => {
     return res.status(404).json({ code: 404, success: false, message: `No user with id: ${id}` });
   }
 
-  const updatedUser = { name: `${firstName} ${lastName}`, dateOfBirth, address, phoneNumber, userImage, bio, interests, joinedAt, organizations, _id: id };
-  
   try {
-    const updatedUser = await UserModel.findByIdAndUpdate(id, updatedUser, { new: true });
-  
-    if (!updatedUser) {
+    const existingUser = await UserModel.findById(id);
+
+    if (!existingUser) {
       return res.status(404).json({ success: false, message: 'User not found', statusCode: 404 });
     }
-    
-    const updatedUserWithoutPassword = await UserModel.findById(updatedUser._id).select('-password -__v');
-    updatedUserWithoutPassword._doc.userImage = userImage ? `${req.protocol}://${req.get('host')}/${updatedUserWithoutPassword.userImage}` : null;
-    res.status(200).json({ success: true, message: 'User updated successfully', user: updatedUserWithoutPassword, statusCode: 200 });    
+
+    let publicUrl = existingUser.userImage;
+
+    if (userImage) {
+      if (existingUser.userImage) {
+        const oldFile = bucket.file(`profile_pics/${id}/${existingUser.userImage.split('/').pop()}`);
+        await oldFile.delete();
+      }
+
+      const blob = bucket.file(`profile_pics/${id}/${userImage.originalname}`);
+
+      publicUrl = await new Promise((resolve, reject) => {
+        const blobStream = blob.createWriteStream();
+
+        blobStream.on('error', (err) => {
+          reject(err);
+        });
+
+        blobStream.on('finish', async () => {
+          const newUrl = `https://storage.googleapis.com/${bucket.name}/${blob.name}`;
+          resolve(newUrl);
+        });
+
+        blobStream.end(userImage.buffer);
+      });
+    }
+
+    const updatedUser = { name: `${firstName} ${lastName}`, dateOfBirth, address, phoneNumber, userImage: publicUrl, bio, interests, joinedAt, organizations, _id: id };
+    const updatedUserResult = await UserModel.findByIdAndUpdate(id, updatedUser, { new: true });
+    const updatedUserWithoutPassword = await UserModel.findById(updatedUserResult._id).select('-password -__v');
+    updatedUserWithoutPassword._doc.userImage = updatedUser.userImage;
+    res.status(200).json({ success: true, message: 'User updated successfully', user: updatedUserWithoutPassword, statusCode: 200 });
     logger.info(`User updated successfully for id: ${id}`);
   } catch (error) {
     logger.error(`Update user error for id: ${id}`, error);
     res.status(500).json({ code: 500, success: false, message: "Something went wrong" });
   }
 };
+
 
 
 export const deleteUser = async (req, res) => {
@@ -140,12 +222,29 @@ export const deleteUser = async (req, res) => {
   }
 
   try {
-    const user = await UserModel.findByIdAndDelete(id);
+    const user = await UserModel.findById(id);
 
-    if (!user) {signin
+    if (!user) {
       logger.info(`User not found for id: ${id}`);
       return res.status(404).json({ code: 404, success: false, message: `User not found` });
     }
+
+    if (user.userImage) {
+      const fileName = encodeURIComponent(user.userImage.split('/').pop());
+      const filePath = `profile_pics/${id}/${fileName}`;
+      const file = bucket.file(filePath);
+      const [exists] = await file.exists();
+    
+      if (exists) {
+        try {
+          await file.delete();
+        } catch (error) {
+          logger.error(`Error deleting image for user id: ${id}`, error);
+        }
+      }
+    }
+
+    await UserModel.findByIdAndDelete(id);
 
     logger.info(`User deleted successfully for id: ${id}`);
     res.json({ code: 200, success: true, message: "User deleted successfully." });
@@ -154,6 +253,7 @@ export const deleteUser = async (req, res) => {
     res.status(500).json({ code: 500, success: false, message: "Something went wrong" });
   }
 };
+
 
 
 export const getUserDetails = async (req, res) => {
@@ -181,6 +281,7 @@ export const getUserDetails = async (req, res) => {
 };
 
 
+
 export const refreshToken = async (req, res) => {
   const refreshToken = req.body.token;
 
@@ -203,9 +304,11 @@ export const refreshToken = async (req, res) => {
     res.status(200).json({ success: true, message: 'Token refreshed successfully', accessToken: token, code: 200 });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ success: false, message: 'Internal server error',  code: 500 });
+    res.status(500).json({ success: false, message: 'Internal server error', code: 500 });
   }
 };
+
+
 
 export const verifyToken = async (req, res) => {
   console.log('Verifying token');

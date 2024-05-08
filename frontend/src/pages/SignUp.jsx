@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { Layout, Row, Col, Form, Input, Button, Card, DatePicker, Space, Typography, Divider } from 'antd'; //Checkbox, Upload, 
 import { apiCall } from '../utils/apiHandler';
-// import { UploadOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
+
+import { UploadOutlined } from '@ant-design/icons';
 
 import { showCustomToast } from '../components/showCustomToast';
+import { Upload } from 'antd';
 
 const { Title } = Typography;
 
@@ -30,6 +33,7 @@ const SignUp = () => {
     };
 
     const handleSecondStepSubmit = async (values) => {
+        console.log('handleSecondStepSubmit called', userImage);
         const { showSuccessToast, showErrorToast } = showCustomToast();
         const userData = new FormData();
         userData.append('email', email);
@@ -42,7 +46,6 @@ const SignUp = () => {
         if (userImage) {
             userData.append('userImage', userImage);
         }
-
         try {
             const response = await apiCall({
                 method: 'POST',
@@ -61,10 +64,11 @@ const SignUp = () => {
         }
     };
 
-    // const handleUpload = file => {
-    //     setUserImage(file.originFileObj);
-    //     return false;
-    // };
+    const handleUpload = file => {
+        console.log('handleUpload called', file);
+        setUserImage(file);
+        return false;
+    };
 
     return (
         <Layout style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -87,6 +91,9 @@ const SignUp = () => {
                                     </Form.Item>
                                     <Form.Item>
                                         <Button type="primary" htmlType="submit" block>Next</Button>
+                                        <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+                                            Already have an account? <Link to="/signin">Sign In</Link>
+                                        </div>
                                     </Form.Item>
                                 </Form>
                             ) : (
@@ -112,11 +119,12 @@ const SignUp = () => {
                                     <Form.Item name="interests">
                                         <Input placeholder="Interests" />
                                     </Form.Item>
-                                    {/* <Form.Item label="Profile Photo">
+
+                                    <Form.Item label="Profile Photo">
                                         <Upload beforeUpload={handleUpload}>
                                             <Button icon={<UploadOutlined />}>Click to Upload</Button>
                                         </Upload>
-                                    </Form.Item> */}
+                                    </Form.Item>
                                     <Form.Item>
                                         <Button type="primary" htmlType="submit" block>Sign Up</Button>
                                     </Form.Item>

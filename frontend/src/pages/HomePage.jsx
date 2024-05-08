@@ -58,7 +58,7 @@ const HomePage = () => {
   return (
     <div>
       <Navbar />
-      <Layout style={{ minHeight: '100vh' }}>
+      <Layout style={{ height: "100vh", overflow: "auto" }}>
         <Content style={{ padding: '50px' }}>
           <Title>Your Notes</Title>
           <div style={{ padding: '24px', minHeight: '280px' }}>

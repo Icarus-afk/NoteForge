@@ -1,9 +1,9 @@
-import { Layout, Card, Typography, Avatar } from 'antd';
+import { Layout, Card, Typography, Avatar, Descriptions } from 'antd';
 import Navbar from '../components/Navbar';
-import { UserOutlined } from '@ant-design/icons';
+import { UserOutlined, CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 
 const { Content } = Layout;
-const { Title, Paragraph } = Typography;
+const { Title } = Typography;
 
 const ProfilePage = () => {
     const user = JSON.parse(localStorage.getItem('user')); // Get user data from local storage
@@ -11,17 +11,25 @@ const ProfilePage = () => {
     return (
         <Layout style={{ minHeight: '100vh' }}>
             <Navbar />
-            <Content style={{ padding: '0 50px', marginTop: 128 }}>
-                <div style={{ adding: 24, minHeight: 380, display: 'flex', justifyContent: 'center' }}>
-                    <Card style={{ width: 300 }}>
-                        <Avatar size={64} icon={<UserOutlined />} />
-                        <Title level={2} style={{ textAlign: 'center' }}>{user.name}</Title>
-                        <Paragraph>Email: {user.email}</Paragraph>
-                        <Paragraph>Joined at: {new Date(user.joinedAt).toLocaleDateString()}</Paragraph>
-                        <Paragraph>Active: {user.isActive ? 'Yes' : 'No'}</Paragraph>
-                        <Paragraph>Admin: {user.isAdmin ? 'Yes' : 'No'}</Paragraph>
-                    </Card>
-                </div>
+            <Content style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 64px)' }}>
+                <Card style={{ width: 500 }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+                    <Avatar size={64} src={`data:image/jpeg;base64,${user.userImage}`} />
+                    </div>
+                    <Title level={2} style={{ textAlign: 'center' }}>{user.name}</Title>
+                    <Descriptions column={1}>
+                        <Descriptions.Item label="Email">{user.email}</Descriptions.Item>
+                        <Descriptions.Item label="Date of Birth">{new Date(user.dateOfBirth).toLocaleDateString()}</Descriptions.Item>
+                        <Descriptions.Item label="Address">{user.address}</Descriptions.Item>
+                        <Descriptions.Item label="Phone Number">{user.phoneNumber}</Descriptions.Item>
+                        <Descriptions.Item label="Bio">{user.bio}</Descriptions.Item>
+                        <Descriptions.Item label="Interests">{user.interests.join(', ')}</Descriptions.Item>
+                        <Descriptions.Item label="Joined At">{new Date(user.joinedAt).toLocaleDateString()}</Descriptions.Item>
+                        <Descriptions.Item label="Active">
+                            {user.isActive ? <CheckCircleOutlined style={{ color: 'green' }} /> : <CloseCircleOutlined style={{ color: 'red' }} />}
+                        </Descriptions.Item>
+                    </Descriptions>
+                </Card>
             </Content>
         </Layout>
     );

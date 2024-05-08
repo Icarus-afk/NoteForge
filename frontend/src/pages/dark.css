@@ -1,0 +1,25 @@
+.rmel-container.dark {
+    background-color: #2f2f2f;
+    color: #f8f8f2;
+  }
+  
+  .rmel-container.dark .rmel-toolbar {
+    background-color: #1f1f1f;
+    border-bottom: 1px solid #444;
+  }
+  
+  .rmel-container.dark .rmel-toolbar button {
+    color: #f8f8f2;
+  }
+  
+  .rmel-container.dark .section-cn {
+    background-color: #2f2f2f;
+  }
+  
+  .rmel-container.dark .section-cntnr {
+    border-left: 1px solid #444;
+  }
+  
+  .rmel-container.dark .section-cntnr .section {
+    background-color: #1f1f1f;
+  }
