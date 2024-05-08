@@ -5,7 +5,7 @@ import UserModel from "../models/user.js";
 import dotenv from 'dotenv';
 import { Storage } from '@google-cloud/storage';
 import logger from '../utils/consoleLogger.js'
-import redisClient from '../utils//initRedis.js';
+// import redisClient from '../utils//initRedis.js';
 import { generateToken } from "../utils/generateToken.js";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
