@@ -80,6 +80,7 @@ const HomePage = () => {
                     >
                       <Meta title={note.title} />
                       <p>{note.content}</p>
+                      <p>Created at: {new Date(note.createdAt).toLocaleDateString()}</p>
                       <Link
                         to={{
                           pathname: `/note/${note._id}`,

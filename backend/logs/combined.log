@@ -1018,3 +1018,38 @@
 2024-05-08 19:57:32 [info]: User signed in successfully for email: ahme2d@gmail.com
 2024-05-08 19:57:48 [info]: Signin attempt for email: ahmed.ehsan666@gmail.com
 2024-05-08 19:57:48 [info]: User signed in successfully for email: ahmed.ehsan666@gmail.com
+2024-05-08 20:02:35 [info]: Signin attempt for email: ahmed.ehsan11@gmail.com
+2024-05-08 20:02:35 [error]: Signin error for email: ahmed.ehsan11@gmail.com Cannot read properties of null (reading 'split')
+2024-05-08 20:02:38 [info]: Signin attempt for email: ahmed.ehsan11@gmail.com
+2024-05-08 20:02:38 [error]: Signin error for email: ahmed.ehsan11@gmail.com Cannot read properties of null (reading 'split')
+2024-05-08 20:04:27 [info]: Connected to Redis
+2024-05-08 20:04:27 [info]: Database connected successfully
+2024-05-08 20:04:27 [info]: Server running on port = 8000
+2024-05-08 20:04:29 [info]: Signin attempt for email: ahmed.ehsan11@gmail.com
+2024-05-08 20:04:44 [info]: Connected to Redis
+2024-05-08 20:04:44 [info]: Database connected successfully
+2024-05-08 20:04:44 [info]: Server running on port = 8000
+2024-05-08 20:04:45 [info]: Signin attempt for email: ahmed.ehsan11@gmail.com
+2024-05-08 20:04:45 [error]: Signin error for email: ahmed.ehsan11@gmail.com Cannot read properties of null (reading 'split')
+2024-05-08 20:04:54 [info]: Connected to Redis
+2024-05-08 20:04:54 [info]: Database connected successfully
+2024-05-08 20:04:54 [info]: Server running on port = 8000
+2024-05-08 20:05:08 [info]: Signin attempt for email: ahmed.ehsan11@gmail.com
+2024-05-08 20:05:31 [info]: Connected to Redis
+2024-05-08 20:05:31 [info]: Database connected successfully
+2024-05-08 20:05:31 [info]: Server running on port = 8000
+2024-05-08 20:05:33 [info]: Signin attempt for email: ahmed.ehsan11@gmail.com
+2024-05-08 20:05:33 [info]: User signed in successfully for email: ahmed.ehsan11@gmail.com
+2024-05-08 20:05:44 [info]: Signin attempt for email: ahmed.ehsan10@gmail.com
+2024-05-08 20:05:44 [info]: User signed in successfully for email: ahmed.ehsan10@gmail.com
+2024-05-08 20:06:13 [info]: Signin attempt for email: ahmed.ehsan10@gmail.com
+2024-05-08 20:06:13 [info]: User signed in successfully for email: ahmed.ehsan10@gmail.com
+2024-05-08 21:05:09 [info]: Connected to Redis
+2024-05-08 21:05:09 [info]: Database connected successfully
+2024-05-08 21:05:09 [info]: Server running on port = 8000
+2024-05-08 21:05:49 [info]: Connected to Redis
+2024-05-08 21:05:51 [info]: Database connected successfully
+2024-05-08 21:05:51 [info]: Server running on port = 8000
+2024-05-08 21:56:30 [info]: Connected to Redis
+2024-05-08 21:56:33 [info]: Database connected successfully
+2024-05-08 21:56:33 [info]: Server running on port = 8000

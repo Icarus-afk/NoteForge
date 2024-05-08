@@ -56,23 +56,23 @@ export const signin = async (req, res) => {
     });
 
     // const refreshToken = jwt({ id: oldUser._id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
+    if (oldUser.userImage) {
+      const bucket = storage.bucket(process.env.BUCKET);
+      const fileName = oldUser.userImage.split('/').pop();
+      const filePath = `profile_pics/${oldUser._id}/${fileName}`;
+      const file = bucket.file(filePath);
+      const tempFilePath = path.join(os.tmpdir(), path.basename(filePath));
+      await file.download({ destination: tempFilePath });
 
-    const bucket = storage.bucket(process.env.BUCKET);
-    const fileName = oldUser.userImage.split('/').pop();
-    const filePath = `profile_pics/${oldUser._id}/${fileName}`;
-    const file = bucket.file(filePath);
-    const tempFilePath = path.join(os.tmpdir(), path.basename(filePath));
-    await file.download({destination: tempFilePath});
+      // Read the image file as binary data
+      let imageData = fs.readFileSync(tempFilePath);
 
-    // Read the image file as binary data
-    let imageData = fs.readFileSync(tempFilePath);
-
-    // Delete the temporary file
-    fs.unlinkSync(tempFilePath);
-    oldUser.userImage = imageData.toString('base64');
+      // Delete the temporary file
+      fs.unlinkSync(tempFilePath);
+      oldUser.userImage = imageData.toString('base64');
+    }
     logger.info(`User signed in successfully for email: ${email}`);
     res.status(200).json({ code: 200, success: true, message: "Signed in successfully", data: { result: oldUser } });
-
   } catch (err) {
     logger.error(`Signin error for email: ${email}`, err);
     res.status(500).json({ code: 500, success: false, message: "Something went wrong" });
@@ -234,7 +234,7 @@ export const deleteUser = async (req, res) => {
       const filePath = `profile_pics/${id}/${fileName}`;
       const file = bucket.file(filePath);
       const [exists] = await file.exists();
-    
+
       if (exists) {
         try {
           await file.delete();

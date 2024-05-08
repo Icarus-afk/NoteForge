@@ -6,8 +6,7 @@ const { Content } = Layout;
 const { Title } = Typography;
 
 const ProfilePage = () => {
-    const user = JSON.parse(localStorage.getItem('user')); // Get user data from local storage
-
+    const user = JSON.parse(localStorage.getItem('user')); 
     return (
         <Layout style={{ minHeight: '100vh' }}>
             <Navbar />
