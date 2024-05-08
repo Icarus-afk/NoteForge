@@ -256,29 +256,29 @@ export const deleteUser = async (req, res) => {
 
 
 
-export const getUserDetails = async (req, res) => {
-  const { id } = req.params;
+// export const getUserDetails = async (req, res) => {
+//   const { id } = req.params;
 
-  try {
-    let userDetails = await redisClient.get(`user:${id}`);
+//   try {
+//     let userDetails = await redisClient.get(`user:${id}`);
 
-    if (!userDetails) {
-      userDetails = await UserModel.findOne({ _id: id }).select('-password');
+//     if (!userDetails) {
+//       userDetails = await UserModel.findOne({ _id: id }).select('-password');
 
-      if (!userDetails) {
-        return res.status(404).json({ code: 404, success: false, message: "User not found" });
-      }
-      await redisClient.setex(`user:${userDetails.name}`, 3600, JSON.stringify(userDetails));
-    } else {
-      userDetails = JSON.parse(userDetails);
-    }
+//       if (!userDetails) {
+//         return res.status(404).json({ code: 404, success: false, message: "User not found" });
+//       }
+//       await redisClient.setex(`user:${userDetails.name}`, 3600, JSON.stringify(userDetails));
+//     } else {
+//       userDetails = JSON.parse(userDetails);
+//     }
 
-    res.status(200).json({ code: 200, success: true, data: userDetails });
-  } catch (err) {
-    logger.error
-    res.status(500).json({ code: 500, success: false, message: "Something went wrong" });
-  }
-};
+//     res.status(200).json({ code: 200, success: true, data: userDetails });
+//   } catch (err) {
+//     logger.error
+//     res.status(500).json({ code: 500, success: false, message: "Something went wrong" });
+//   }
+// };
 
 
 

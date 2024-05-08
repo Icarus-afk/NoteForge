@@ -18,7 +18,7 @@ router.post('/signup', upload.single('userImage'), passwordStrength, signup);
 router.post('/refresh-token', refreshToken);
 router.delete('/:id', auth, deleteUser);
 router.patch('/:id', upload.single('userImage'), auth, updateUser);
-router.get('/:id', auth, getUserDetails);
+// router.get('/:id', auth, getUserDetails);
 
 // Google authentication routes
 router.get('/auth/google', passport.authenticate('google', {
