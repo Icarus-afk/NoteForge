@@ -67,7 +67,7 @@ const SignUp = () => {
     // };
 
     return (
-        <Layout style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#f0f2f5' }}>
+        <Layout style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Row>
                 <Col span={24} offset={0}>
                     <Card bordered={false} style={{ width: '100%', maxWidth: '100vw', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.15)' }}>

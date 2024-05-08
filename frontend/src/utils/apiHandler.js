@@ -17,6 +17,14 @@ axios.defaults.headers.common['Content-Type'] = 'application/json';
  * @returns {Promise<Object>} - The response data.
  */
 export const apiCall = async ({ method, endpoint, data, params, headers }) => {
+  // If data is FormData, set Content-Type to multipart/form-data
+  if (data instanceof FormData) {
+    headers = {
+      ...headers,
+      'Content-Type': 'multipart/form-data',
+    };
+  }
+
   try {
     const response = await axios({
       method,

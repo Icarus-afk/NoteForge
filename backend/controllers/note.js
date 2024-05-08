@@ -221,7 +221,7 @@ export const deleteNote = async (req, res) => {
 
 
 export const getFile = async (req, res) => {
-  console.log("Gettin file")
+  console.log("Getting file")
   const note = await Note.findById(req.params.id);
   if (!note) {
     return res.status(404).json({
@@ -257,13 +257,16 @@ export const getFile = async (req, res) => {
       console.error(err);
       res.status(500).send(err);
     } else {
-      res.setHeader('Content-Type', 'text/markdown');
-      res.setHeader('Content-Disposition', `attachment; filename=${path.basename(filePath)}`);
-      res.sendFile(tempFilePath, function(err) {
+      fs.readFile(tempFilePath, 'utf8', function(err, data) {
         if (err) {
           console.error(err);
           res.status(500).send(err);
         } else {
+          res.json({
+            title: note.title,
+            content: data
+          });
+
           fs.unlink(tempFilePath, function(err) {
             if (err) console.error(err);
           });

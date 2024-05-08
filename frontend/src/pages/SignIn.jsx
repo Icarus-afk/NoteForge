@@ -25,6 +25,7 @@ const SignIn = () => {
 
             if (response.success) {
                 showSuccessToast(response.message);
+                localStorage.setItem('user', JSON.stringify(response.data.result)); // Save user data to local storage
                 navigate(from.pathname)
             } else {
                 showErrorToast(response.message);
