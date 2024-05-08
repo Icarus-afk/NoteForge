@@ -1,0 +1,24 @@
+{
+    "version": 1,
+    "name": "NoteForge",
+    "builds": [
+        {
+            "src": "package.json",
+            "use": "@vercel/node"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/user/(.*)",
+            "dest": "/routes/users.js"
+        },
+        {
+            "src": "/note/(.*)",
+            "dest": "/routes/notes.js"
+        },
+        {
+            "src": "/images/user_image/(.*)",
+            "dest": "/images/user_image/$1"
+        }
+    ]
+}
