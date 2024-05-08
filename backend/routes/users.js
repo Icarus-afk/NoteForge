@@ -1,5 +1,5 @@
 import express from 'express';
-import { signin, signup, deleteUser, updateUser, getUserDetails, refreshToken, verifyToken } from '../controllers/user.js'
+import { signin, signup, deleteUser, updateUser,  refreshToken, verifyToken } from '../controllers/user.js' //getUserDetails,
 import auth from '../middleware/auth.js';
 import passwordStrength from '../middleware/passwordStrength.js'
 import passport from '../utils/passportConfig.js';
