@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 // Set the base URL for all requests
-axios.defaults.baseURL = `http://${window.location.hostname}:8000`;
+axios.defaults.baseURL = `https://noteforge.onrender.com`;
 
 // Set default headers for all requests
 axios.defaults.headers.common['Content-Type'] = 'application/json';
