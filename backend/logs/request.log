@@ -1168,3 +1168,16 @@ Time: 5/8/2024, 9:56:37 PM, Method: POST, URL: /user/signup, Status: 400
 Time: 5/8/2024, 9:56:42 PM, Method: POST, URL: /user/signup, Status: 400
 Time: 5/8/2024, 9:56:46 PM, Method: POST, URL: /user/signup, Status: 400
 Time: 5/8/2024, 9:57:01 PM, Method: POST, URL: /user/signup, Status: 201
+Time: 5/9/2024, 5:18:12 PM, Method: GET, URL: /user/verify-token, Status: 401
+Time: 5/9/2024, 5:18:13 PM, Method: GET, URL: /user/verify-token, Status: 401
+Time: 5/9/2024, 5:18:14 PM, Method: GET, URL: /user/verify-token, Status: 401
+Time: 5/9/2024, 5:18:15 PM, Method: GET, URL: /user/verify-token, Status: 401
+Time: 5/9/2024, 5:18:15 PM, Method: GET, URL: /user/verify-token, Status: 401
+Time: 5/9/2024, 5:18:15 PM, Method: GET, URL: /user/verify-token, Status: 401
+Time: 5/9/2024, 5:18:15 PM, Method: GET, URL: /user/verify-token, Status: 401
+Time: 5/9/2024, 5:18:15 PM, Method: GET, URL: /user/verify-token, Status: 401
+Time: 5/9/2024, 5:19:42 PM, Method: GET, URL: /user/verify-token, Status: 401
+Time: 5/9/2024, 5:21:56 PM, Method: GET, URL: /user/verify-token, Status: 401
+Time: 5/9/2024, 5:23:11 PM, Method: GET, URL: /user/verify-token, Status: 401
+Time: 5/9/2024, 5:23:56 PM, Method: POST, URL: /user/signin, Status: 200
+Time: 5/9/2024, 5:25:53 PM, Method: GET, URL: /user/verify-token, Status: 401

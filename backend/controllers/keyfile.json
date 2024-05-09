@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "noteforge",
+  "private_key_id": "894ef7075c9d0a7cdfc3a09ed986300b386a79c0",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDsJQzqxOwT8/Nx\nAz66JzuyYuLkF12v/4X1QaD/Y7TkAYOoG8Q/W2+JcwVhm89Xb9GAUR1eBWDPo8Wb\n8X6DQgMAycAYmV4XN78cgfBFNpk5+nnLz2ea8iEOENT4dbn60zgMMa3EHZnDmExg\neW6kGUID0OkAGNuAZeuqfoi05se3q0hUyLk9uPW4BNn/gyFwqv6aaELa6rna/Wto\nAxlElXRCuT80S8uzFwTOb+Mbb2ifdOBMkyUA81cUJIeLDQr2qMQBbwdhUOBrC7V6\nz+UJzb9FGr+4shz136DNinsWJ4EA4iJEYYp1krUizui1oAF/a4jXfXOWhEjknRlu\n6JtPjhMjAgMBAAECggEANp4jLLG7QKot5jev7HJillHU1Jiq7KgXHbC+QhOXpRzM\njLdPXrARTiMyXW8iN8D/HcSlHDf2OlBQxk7GyikcdLQ1H/tpDcmxBDDxl7CXJBfQ\nz9j6x5W1G4G9IHJqP59W2UssO631AI5bK/0qH/5PjH5nRcR6EGqCZX66s8yk6M/d\nPzL/qCuE0w1HOhHVI5s/wZcC1C27BlB2+7zMg3x1H3eJnvOqEYGle+sR2bZweGX7\njeT7/WXLxPB3WE5F4VYhfZnQ8G5X9HVJwRtlYcqw3+gMfWXNBZmNyRh7JSoh6SYt\nMcJBH662GdOGHXxU2/vBlhQu1kXLTUq2u4ivgE0LIQKBgQD4BtRBM3VGWlW1TuH8\neHiE2gP/Ksspw9M5KhoNqQK5eQnlyQuggYDvna29sOUm0hTJkPy0jPI49gtl1IAS\nK36Nz3PFT8u8x78rKTcfC61OgSXfuqMsfo0hIwup4UD57MDlaXFxfhKi2aHaTF3C\n8RjohyCpMJcxxrJFBEqcbDyKuwKBgQDzvG/pT2vDHb3U88Lmy2bOygoA9Q3GigRg\nlMozw686Q/t3Ky/NnDFosiaavwNHZSn6XJiaXVffWLK/RbTTgoJbbDEfx7HJXumI\n5LZasfUGbHUFMNrY5kWSgL3o215RhQNOFTak1zY0HzJk5f3fbt2PftgheA3T8uJr\nMftoJ+lWuQKBgBkUf7QUIwC5M7+AuYNRH0a30P2lcyPHBH3cTwQgmgDtR13wBXf2\ngHY6aI4s7A8P4UA8pAER25B8+MwUP9sWgNaQKrHCDuUJAcC4izVddenhT1YfRk7C\ngTzfkVddSre7BApuriT+zZ2gCijL3hNPU+h3eYsCOdezsuUduPm2TCzvAoGBAMe9\nVgzhzBLy7Z11QfS3HYI7aiVMrURV2K55YJc5NwFNsub+2kbqSEdfL2nDPWGl0tfc\nSCbAdgGPg7Rh4IUwv7lCGaPMl7LJeCJ6I8KBcaYY/XEKj14On1cm7/rCwzGVCpdT\npRtDTqU6J6cuH3WaOjGdJmuPIe3ebpSgOkIp6vvpAoGAddt4RmYuhP9YmFZm+4Pg\nqSj0ObNQgwnA2aowXI2pRx7qiLORDahH+BbWoTA1vq0kGx/RgT/W9hOW3HhOK4uF\nXtN/mL3YhKuFmv/UFuAhDqykdjZGVEAfwimXZqVqrkhsjNtU3vU/0vazdW+9otTm\npK6wvSg4uS6QSlNT6w5wuh8=\n-----END PRIVATE KEY-----\n",
+  "client_email": "note-forge@noteforge.iam.gserviceaccount.com",
+  "client_id": "110269552898384764684",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/note-forge%40noteforge.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
