@@ -49,7 +49,7 @@ export const signin = async (req, res) => {
     console.log("Token -->", token);
     res.cookie('token', token, {
       httpOnly: true,
-      secure: false,
+      secure: true,
       sameSite: 'none',
       maxAge: 60 * 60 * 1000,
       path: '/'
