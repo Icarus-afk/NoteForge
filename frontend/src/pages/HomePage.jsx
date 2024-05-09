@@ -5,6 +5,10 @@ import { apiCall } from '../utils/apiHandler';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { showCustomToast } from '../components/showCustomToast';
+import { EyeOutlined } from '@ant-design/icons';
+import { EditOutlined } from '@ant-design/icons'; 
+
+
 
 const { Content } = Layout;
 const { Title } = Typography;
@@ -65,7 +69,7 @@ const HomePage = () => {
             {notes.length > 0 ? (
               <Row gutter={16}>
                 {notes.map(note => (
-                  <Col span={8} key={note._id}>
+                  <Col xs={24} sm={24} md={12} lg={8} xl={8} key={note._id}>
                     <Card
                       hoverable
                       style={{
@@ -75,21 +79,17 @@ const HomePage = () => {
                         boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.1)'
                       }}
                       actions={[
-                        <DeleteOutlined key="delete" onClick={() => handleDelete(note._id)} />
+                        <DeleteOutlined key="delete" onClick={() => handleDelete(note._id)} />,
+                        <Link key={`view-${note._id}`} to={`/note/${note._id}`}><EyeOutlined key="view" /></Link>,
+                        <Link key={`edit-${note._id}`} to={{
+                          pathname: `/note/${note._id}/edit`,
+                          state: { fileId: note._id }
+                        }}><EditOutlined key="edit" /></Link>, // Add this line
                       ]}
                     >
                       <Meta title={note.title} />
                       <p>{note.content}</p>
                       <p>Created at: {new Date(note.createdAt).toLocaleDateString()}</p>
-                      <Link
-                        to={{
-                          pathname: `/note/${note._id}`,
-                          state: { fileId: note._id }
-                        }} target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        Open Note
-                      </Link>
                     </Card>
                   </Col>
                 ))}

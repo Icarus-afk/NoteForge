@@ -1,23 +1,24 @@
 import { useState } from 'react';
-import { Layout, Row, Col, Form, Input, Button, Card, DatePicker, Space, Typography, Divider } from 'antd'; //Checkbox, Upload, 
+import { Layout, Row, Col, Form, Input, Button, Card, DatePicker, Space, Typography, Divider } from 'antd';
 import { apiCall } from '../utils/apiHandler';
-import { Link } from 'react-router-dom';
-
+import { Link, useNavigate } from 'react-router-dom';
 import { UploadOutlined } from '@ant-design/icons';
-
 import { showCustomToast } from '../components/showCustomToast';
 import { Upload } from 'antd';
+import logo from '../assets/logo.png'; // Import the logo
+
+
 
 const { Title } = Typography;
-
 
 const SignUp = () => {
     const [step, setStep] = useState(1);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [userImage, setUserImage] = useState();
-    // const [confirmPassword, setConfirmPassword] = useState('');
-    // const [userDetails, setUserDetails] = useState({});
+    const [loading, setLoading] = useState(false); // Add this line
+    const navigate = useNavigate();
+
 
     const handleFirstStepSubmit = async (values) => {
         const { showErrorToast } = showCustomToast();
@@ -33,7 +34,7 @@ const SignUp = () => {
     };
 
     const handleSecondStepSubmit = async (values) => {
-        console.log('handleSecondStepSubmit called', userImage);
+        setLoading(true); // Add this line
         const { showSuccessToast, showErrorToast } = showCustomToast();
         const userData = new FormData();
         userData.append('email', email);
@@ -55,23 +56,27 @@ const SignUp = () => {
 
             if (response.success) {
                 showSuccessToast('Signed up successfully');
+                navigate('/signin');
             } else {
                 showErrorToast(response.message);
             }
         } catch (error) {
             console.error('Error:', error);
             showErrorToast(error.response && error.response.data.message ? error.response.data.message : 'An error occurred...');
+        } finally {
+            setLoading(false); // Add this line
         }
     };
 
     const handleUpload = file => {
-        console.log('handleUpload called', file);
         setUserImage(file);
         return false;
     };
 
     return (
         <Layout style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <img src={logo} alt="Logo" style={{ display: 'block', margin: '0 auto', padding: '20px' }} /> {/* Add the logo */}
+
             <Row>
                 <Col span={24} offset={0}>
                     <Card bordered={false} style={{ width: '100%', maxWidth: '100vw', boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.15)' }}>
@@ -126,7 +131,7 @@ const SignUp = () => {
                                         </Upload>
                                     </Form.Item>
                                     <Form.Item>
-                                        <Button type="primary" htmlType="submit" block>Sign Up</Button>
+                                        <Button type="primary" htmlType="submit" block loading={loading}>Sign Up</Button>
                                     </Form.Item>
 
                                 </Form>
