@@ -55,7 +55,7 @@ const NoteEditor = ({ isNewNote }) => {
           endpoint: `/note/create`,
           data: formData,
         });
-        navigate(`/note/${response.data._id}`);
+        navigate(`/note/${response.data._id}/edit`);
       } else {
         await apiCall({
           method: 'PUT',
