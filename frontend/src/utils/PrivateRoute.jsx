@@ -12,14 +12,19 @@ const PrivateRoute = ({ children }) => {
   useEffect(() => {
     const checkAuthentication = async () => {
       setIsLoading(true); // Start loading
-
+      console.log('Checking authentication...'); // Debugging statement
+      
       try {
+        console.log('Sending request to verify token...'); // Debugging statement
         const response = await apiCall({
           method: 'GET',
           endpoint: '/user/verify-token',
           withCredentials: true
         });
-        if (response.status === 200) {
+        console.log('Received response:', response); // Debugging statement
+        console.log('Response data:', response.data); // Debugging statement
+      
+        if (response === "OK") {
           console.log('Refresh token is valid');
           setIsAuthenticated(true);
         } else {
@@ -38,19 +43,23 @@ const PrivateRoute = ({ children }) => {
       }
 
       setIsLoading(false); 
+      console.log('Finished checking authentication'); // Debugging statement
     };
 
     checkAuthentication();
   }, [navigate]); 
 
   if (isLoading) {
+    console.log('Loading...'); // Debugging statement
     return <Spinner />;
-    }
+  }
 
   if (!isAuthenticated) {
+    console.log('Not authenticated'); // Debugging statement
     return null;
   }
 
+  console.log('Authenticated, rendering children'); // Debugging statement
   return isAuthenticated ? children : <Navigate to="/signin" state={{ from: location }} />;
 }
 

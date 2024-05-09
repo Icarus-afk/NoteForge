@@ -1,5 +1,5 @@
 const Spinner = () => (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', opacity:'50%'}}>
       <div style={{
         border: '16px solid #f3f3f3',
         borderRadius: '50%',
