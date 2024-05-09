@@ -52,7 +52,6 @@ export const signin = async (req, res) => {
       secure: true,
       sameSite: 'none',
       maxAge: 60 * 60 * 1000,
-      path: '/'
     });
 
     // const refreshToken = jwt({ id: oldUser._id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
