@@ -30,7 +30,7 @@ app.use(cookieParser());
 
 
 app.use(cors({
-  origin: ['https://noteforge.onrender.com'], 
+  origin: ['https://note-forge-rho.vercel.app'], 
   credentials: true
 }));
 
