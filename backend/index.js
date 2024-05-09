@@ -8,9 +8,11 @@ import logger from './utils/consoleLogger.js';
 dotenv.config();
 
 const PORT = process.env.PORT || 8000;
+const host = '0.0.0.0';
+
 
 connectDB().then(() => {
     const server = createServer(app);
     initSocket(server);
-    server.listen(PORT, () => logger.info(`Server running on port = ${PORT}`));
+    server.listen(PORT, host,  () => logger.info(`Server running on port = ${PORT}`));
 });
