@@ -1,8 +1,8 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate, Navigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { apiCall } from './apiHandler';
+import Spinner from '../components/Spinner';
 
 const PrivateRoute = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -44,8 +44,8 @@ const PrivateRoute = ({ children }) => {
   }, [navigate]); 
 
   if (isLoading) {
-    return <div>Loading...</div>; // Or some loading spinner
-  }
+    return <Spinner />;
+    }
 
   if (!isAuthenticated) {
     return null;

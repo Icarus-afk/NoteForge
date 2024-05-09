@@ -30,8 +30,8 @@ app.use(cookieParser());
 
 
 app.use(cors({
-    origin: ['*'], 
-    credentials: true
+  origin: ['https://noteforge.onrender.com'], 
+  credentials: true
 }));
 
 app.use(session({
