@@ -228,9 +228,9 @@ const noteSchema = new mongoose.Schema({
 
 ### Middleware
 
-**Auth Middleware:** Protect routes using JWT tokens.
-**Password Strength Middleware:** Ensures strong passwords on user registration.
-**Multer:** Handles file uploads and storage in memory.
+- **Auth Middleware:** Protect routes using JWT tokens.
+- **Password Strength Middleware:** Ensures strong passwords on user registration.
+- **Multer:** Handles file uploads and storage in memory.
 
 ## Process Management
 
